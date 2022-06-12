@@ -122,10 +122,10 @@ user { 'bob':
 **CLASSES**
 
 É possível definir uma classe para configurar vários recursos de uma vez. Exemplo é possível agrupar a configuração do package, file, services, user em uma unidade e dar nome de webserver.<br>
-Esta "class" pode ser definida à um node.<br>
-Para que esta "class" "funcione" a mesma deve ser declarada junto ao módulo.<br>
+Esta classe pode ser definida à um node.<br>
+Para que esta classe "funcione" a mesma deve ser declarada junto ao módulo.<br>
 
-Exemplo de definição de um "class":<br>
+Exemplo de definição de uma classe:<br>
 ```
 class sysadmins {
 
@@ -144,16 +144,64 @@ class sysadmins {
 
 **MODULES**
 
-As "class" devem estar junto aos módulos.<br>
+As classes devem estar junto aos módulos.<br>
 Os módulos também provisionam arquivos e extensões.<br>
 Há um layout de estrutura de pastas e arquivos que devem estar abaixo do modulo (modulepath).<br>
-<br />
+
 Para descobri o modulepath, é necessário executar o comando abaixo:<br>
 ```
-# puppet config print
+# puppet config print modulepath
+# puppet config print (geral)
 ```
-<br />
+
 Neste exemplo o deverá constar uma pasta "webserver" em: <br>
 modulepath = /etc/puppetlabs/code/environments/production/modules<br>
 <br />
-Dentro da pasta criamos uma outra chamada "manifests" então inserimos o arquivo .pp que consta a "class".<br>
+Dentro da pasta criamos uma outra chamada "manifests" então inserimos o arquivo .pp que consta a classe.<br>
+
+Todo módulo possuí uma classe "base" que deve ser chamada de "init.pp"<br>
+
+Relembrando:<br>
+
+O arquivo init.pp que contém a classe webserver:<br>
+```
+class sysadmins {
+
+    group { 'sysadmins':
+        ensure => present,
+    }
+
+    user { 'bob':
+        ensure => present,
+        uid => '9999',
+        groups => 'sysadmins',
+    }
+
+    user { 'susan':
+        ensure => present,
+        uid => '9998',
+        groups => 'sysadmins',
+    }
+
+    user { 'peter':
+        ensure => present,
+        uid => '9997',
+        groups => 'sysadmins',
+    }
+
+}
+```
+
+Após criada a estrutura de pasta sysadmins e adicionado o init.pp com a classe, deve ser realizado o comando com o parâmetro que indica qual módulo/classe base deseja executar:<br>
+
+```
+# puppet apply -e 'include sysadmins'
+```
+
+Deverá estar no seguinte path conforme o comando que havíamos executado "puppet config print":<br>
+<kbd>
+    <img src="https://github.com/fabiokerber/Jenkins/blob/main/img/040220221000.jpg">
+</kbd>
+<br />
+<br />
+
