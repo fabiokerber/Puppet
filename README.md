@@ -2,7 +2,9 @@
 
 Resource Types:<br>
 - Package
+    - Provider: yum, apt, ...
 - User
+    - Provider: useradd, userdel, ...
 - Group
 - Service
 - File
