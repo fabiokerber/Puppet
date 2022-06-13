@@ -1,4 +1,4 @@
-# Puppet
+# Puppet v7.17.0
 
 Resource Types:<br>
 - Package
@@ -210,8 +210,51 @@ O agente se conecta com o servidor via conexão SSL, baixa as configurações e 
 Puppet server é um CA.<br>
 Quando o puppet agent executa pela primeira vez, é gerado uma chave SSL e solicita o certificado ao servidor.<br>
 
+Puppet agent:<br>
 ```
-# puppet agent -t (executa o sincronismo com o servidor)
+# puppet agent -t (executa o sincronismo com o servidor e cria o certificado na primeira execução)
 # puppet agent --noop (compara o catálogo local com o do servidor, mas não aplica nada)
-# puppet cert (comando executado no server para gerenciar os certificados)
+```
+
+Puppet server:<br>
+```
+# /opt/puppetlabs/server/bin/puppetserver ca list (lista certificados pendentes para assinatura)
+# /opt/puppetlabs/server/bin/puppetserver ca sign --certname agent.localdomain (autoriza o certificado para agent.localdomain)
+# /opt/puppetlabs/server/bin/puppetserver ca list --all (lista todos os certificados)
+```
+
+Puppet agent:<br>
+```
+# puppet agent -t (realiza a comunicação com o server)
+```
+
+**COMMON SSL ISSUES**
+
+Servidor e agentes devem estar com o horário sincronizado.<br>
+Certificados válidos entre servidor e agentes (caso o agente seja reinstalado, necessário verificar certificados).<br>
+Se necessário os certificados devem ser removidos no servidor e agente.<br>
+
+**REMOVE AGENT & SERVER CERTIFICATES**
+
+Puppet server:<br>
+```
+# /opt/puppetlabs/server/bin/puppetserver ca clean --certname agent.localdomain (remove o certificado agent.localdomain)
+```
+
+Puppet agent:<br>
+```
+# puppet config print ssldir (exibe o path dos certificados ssl)
+# rm -rf /etc/puppetlabs/puppet/ssl/* (remove todos os certificados)
+# puppet agent -t (será gerado um novo certificado SSL)
+```
+
+Puppet server:<br>
+```
+# /opt/puppetlabs/server/bin/puppetserver ca list (lista certificados pendentes para assinatura)
+# /opt/puppetlabs/server/bin/puppetserver ca sign --certname agent.localdomain (autoriza o certificado para agent.localdomain)
+```
+
+Puppet agent:<br>
+```
+# puppet agent -t (realiza a comunicação com o server)
 ```
