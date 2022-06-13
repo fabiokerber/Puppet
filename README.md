@@ -148,6 +148,11 @@ As classes devem estar junto aos módulos.<br>
 Os módulos também provisionam arquivos e extensões.<br>
 Há um layout de estrutura de pastas e arquivos que devem estar abaixo do modulo (modulepath).<br>
 
+Comando para listar os módulos:<br>
+```
+# puppet module list
+```
+
 Para descobri o modulepath, é necessário executar o comando abaixo:<br>
 ```
 # puppet config print modulepath
@@ -195,6 +200,7 @@ Após criada a estrutura de pasta sysadmins e adicionado o init.pp com a classe,
 
 ```
 # puppet apply -e 'include sysadmins'
+# puppet module list
 ```
 
 <kbd>
@@ -257,4 +263,117 @@ Puppet server:<br>
 Puppet agent:<br>
 ```
 # puppet agent -t (realiza a comunicação com o server)
+```
+
+**PUPPET RUN**
+<kbd>
+    <img src="https://github.com/fabiokerber/Puppet/blob/main/img/130620221013.png">
+</kbd>
+<br />
+<br />
+
+**FACTER**
+
+Coleta uma variedade grande de informações sobre o node e os envia a cada execução do agente.
+
+Puppet agent:<br>
+```
+# facter (exibe todos os dados que são enviados ao puppet server)
+# facter operatingsystem (exibe informações sobre o sistema operacional)
+```
+
+**CATALOG**
+
+Contém todos os recursos gerenciados e o estado que eles devem estar.
+
+**CLASSIFICATION**
+
+Quando há a necessidade de aplicar uma classe à um node, chama-se classificação.
+
+**NODE DEFINITION**
+
+Inclusão de classes a um determinado node.<br>
+
+Exemplos:<br>
+```
+node "agent.localdomain" {
+    include webserver
+    include database
+}
+
+node /*.localdomain/ {
+    include webserver
+    include database
+}
+```
+
+Exemplo caso não entre em nenhum case acima:
+```
+node default {
+    include webserver
+    include database
+}
+```
+
+**APPLY CONFIG TO NODE**
+
+Execute o comando abaixo para listar os módulos já configurados.<br>
+Deve listar o sysadmins.<br>
+Puppet server:<br>
+```
+# puppet module list
+```
+
+Para incluir os módulos aos nodes deve-se configurar os manifestos no path "manifests".
+Execute o comando abaixo para listar o path:<br>
+Puppet server:<br>
+```
+# puppet config print manifest
+```
+
+Crie o arquivo site.pp no path informado conforme abaixo:<br>
+```
+node "agent.localdomain" {
+    include sysadmins
+}
+```
+
+Recapitulando:<br>
+
+- Criado o módulo "sysadmins" (init.pp)<br>
+- Criado o manifesto "node agent.localdomain" (site.pp)<br>
+<kbd>
+    <img src="https://github.com/fabiokerber/Puppet/blob/main/img/130620221043.png">
+</kbd>
+<br />
+<br />
+
+**MORE RESOURCES**
+
+install.sh
+```
+mkdir -p /opt/myapp
+```
+
+test.pp:<br>
+```
+exec { 'install application':
+    path => '/usr/local/bin:/usr/bin:/bin', (procura o install.sh nessas pastas)
+    command => 'install.sh',
+    unless => 'test -d /opt/myapp', (só ira executar caso o retorno seja 0, ou seja, não exista a pasta)  
+}
+```
+
+Outro exemplo, podendo variar os providers.<br>
+mysql.pp:<br>
+```
+package { 'mysql':
+    ensure => installed,
+    provider => 'gem',
+}
+
+package { 'rpm mysql':
+    ensure => installed,
+    name => 'mysql',
+}
 ```
