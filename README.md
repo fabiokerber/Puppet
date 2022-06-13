@@ -200,7 +200,7 @@ Após criada a estrutura de pasta sysadmins e adicionado o init.pp com a classe,
 
 Recapitulando:<br>
 <kbd>
-    <img src="https://github.com/fabiokerber/Puppet/blob/main/img/120620222058.png">
+    <img src="https://github.com/fabiokerber/Puppet/blob/main/img/120620222059.png">
 </kbd>
 <br />
 <br />
