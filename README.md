@@ -377,3 +377,65 @@ package { 'rpm mysql':
     name => 'mysql',
 }
 ```
+
+**FILE RESOURCE TYPE**
+Gerenciar arquivos, links simbolicos ou diretórios.
+Manter modelo no servidor e toda vez que o puppet for executado, e por algum motivo o arquivo alterado o puppet já atualiza conforme o modelo do servidor.
+Exemplo:<br>
+```
+file { '/etc/httpd/httpd.conf':
+    ensure => file,
+    owner => 'root',
+    group => 'root',
+    mode => '0644',
+}
+
+file { '/etc/motd':
+    ensure => file,
+    content => 'Welcome to my system',
+    owner => 'root',
+    group => 'root',
+    mode => '0644',
+}
+
+file { '/etc/httpd/httpd.conf':
+    ensure => file,
+    source => 'puppet:///modules/apache/httpd.conf',
+    owner => 'root',
+    group => 'root',
+    mode => '0644',
+    replace => false, (com este replace, o puppet verifica se o arquivo existe, se não existir faz a cópia e se existir e estiver diferente do source, o puppet não altera nada do conteúdo e verifica apenas o owner, group e mode)
+}
+
+file { '/root/settings':
+    ensure => directory,
+}
+
+URI: puppet://<hostname>/<mountpoint>/<path>
+Obs: com três barras assume-se que o arquivo está no hostname <puppet_server> utilizado no momento da execução.
+```
+
+**RESOURCE ORDERING**
+Configurar dependência entre "resources".
+Exemplo:<br>
+```
+package { 'httpd':
+    ensure => installed,
+}
+
+service { 'httpd':
+    ensure => running,
+    require => Package['httpd'],
+}
+
+=
+
+package { 'httpd':
+    ensure => installed,
+    before => Service['httpd'], (executa a instalação antes de assegurar que esteja em running)
+}
+
+service { 'httpd':
+    ensure => running,
+}
+```
