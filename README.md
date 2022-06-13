@@ -158,10 +158,9 @@ Neste exemplo o deverá constar uma pasta "webserver" em: <br>
 modulepath = /etc/puppetlabs/code/environments/production/modules<br>
 <br />
 Dentro da pasta criamos uma outra chamada "manifests" então inserimos o arquivo .pp que consta a classe.<br>
-
 Todo módulo possuí uma classe "base" que deve ser chamada de "init.pp"<br>
 
-Relembrando:<br>
+Recapitulando:<br>
 
 O arquivo init.pp que contém a classe webserver:<br>
 ```
@@ -198,10 +197,21 @@ Após criada a estrutura de pasta sysadmins e adicionado o init.pp com a classe,
 # puppet apply -e 'include sysadmins'
 ```
 
-Recapitulando:<br>
 <kbd>
     <img src="https://github.com/fabiokerber/Puppet/blob/main/img/120620222059.png">
 </kbd>
 <br />
 <br />
 
+**SERVER & AGENT**
+
+Por default o puppet agent se comunica com o server de 30 em 30 minutos.<br>
+O agente se conecta com o servidor via conexão SSL, baixa as configurações e as aplica.<br>
+Puppet server é um CA.<br>
+Quando o puppet agent executa pela primeira vez, é gerado uma chave SSL e solicita o certificado ao servidor.<br>
+
+```
+# puppet agent -t (executa o sincronismo com o servidor)
+# puppet agent --noop (compara o catálogo local com o do servidor, mas não aplica nada)
+# puppet cert (comando executado no server para gerenciar os certificados)
+```
