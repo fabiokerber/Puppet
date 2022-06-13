@@ -198,9 +198,9 @@ Após criada a estrutura de pasta sysadmins e adicionado o init.pp com a classe,
 # puppet apply -e 'include sysadmins'
 ```
 
-Deverá estar no seguinte path conforme o comando que havíamos executado "puppet config print":<br>
+Recapitulando:<br>
 <kbd>
-    <img src="https://github.com/fabiokerber/Jenkins/blob/main/img/040220221000.jpg">
+    <img src="https://github.com/fabiokerber/Puppet/blob/main/img/120620222058.png">
 </kbd>
 <br />
 <br />
