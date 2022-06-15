@@ -280,6 +280,9 @@ Puppet agent:<br>
 ```
 # facter (exibe todos os dados que são enviados ao puppet server)
 # facter operatingsystem (exibe informações sobre o sistema operacional)
+# facter os
+# facter os.release
+# facter os.release.major
 ```
 
 **CATALOG**
@@ -472,5 +475,34 @@ package { 'httpd':
 file { '/etc/httpd/httpd.conf':
     ensure => file,
     source => 'puppet:///modules/apache/httpd.conf'
+}
+```
+
+**VARIABLES**
+```
+$pkgname = 'httpd'
+
+package { $pkgname:
+    ensure => installed,
+}
+
+$userid = '9999'
+
+user { 'bob':
+    ensure => present,
+    uid => $userid,
+}
+
+$prefix='README'
+$suffix='txt'
+$filename="${prefix}.${suffix}"
+```
+
+**ARRAYS**
+```
+$users = [ 'bob', 'susan', 'peter' ]
+
+user { $users:
+    ensure => present,
 }
 ```
