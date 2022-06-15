@@ -415,6 +415,13 @@ URI: puppet://<hostname>/<mountpoint>/<path>
 Obs: com três barras assume-se que o arquivo está no hostname <puppet_server> utilizado no momento da execução.
 ```
 
+**RELATIONSHIPS**
+<kbd>
+    <img src="https://github.com/fabiokerber/Puppet/blob/main/img/150620221018.png">
+</kbd>
+<br />
+<br />
+
 **RESOURCE ORDERING**
 Configurar dependência entre "resources".
 Exemplo:<br>
@@ -437,5 +444,33 @@ package { 'httpd':
 
 service { 'httpd':
     ensure => running,
+}
+```
+
+**TRIGGERING EVENTS**
+Executa o "notify" quando há alteração no status do serviço.<br>
+```
+service { 'tinpot':
+    ensure => running,
+    enable => true,
+    notify => Exec['clean tinpot cache'],
+}
+
+exec { 'clean tinpot cache':
+    path => '/opt/tinpot/bin',
+    command => 'tinpot --cleancache',
+    refreshonly => true,
+}
+```
+
+**RESOURCE CHAINING**
+"Fixa" (->) uma sequência de execução de recurso após recurso.<br>
+```
+package { 'httpd':
+    ensure => installed,
+} ->
+file { '/etc/httpd/httpd.conf':
+    ensure => file,
+    source => 'puppet:///modules/apache/httpd.conf'
 }
 ```
